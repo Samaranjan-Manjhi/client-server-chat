@@ -1,0 +1,43 @@
+char buff[MAX]; 
+	int cSHandler, connectionCount = 0; 
+	socklen_t len = sizeof(clAddr);
+	while((cSHandler = accept(sSHandler , (struct sockaddr*) & clAddr , &len)) > 0) 
+	{
+	    connectionCount++;
+	    if(fork() == 0) 
+	    { 
+		close(sSHandler); 
+		cout << "Server accepted the connection request." <<endl;
+		while(1)
+		{
+		    int rMsgSize;
+		    if((rMsgSize  = recv(cSHandler , buff , MAX , 0)) > 0)
+		    {
+		        cout << "Msg Received From Client : " << buff << endl;
+		        if(buff[0] == 'b' && buff[1] == 'y' && buff[2] == 'e')
+		        {
+		            cout << "Server : Bye! We will meet again..."<< "\n";
+		            cout << "\nConnection ended... take care bye bye..."<<endl;
+		            send(cSHandler , buff , strlen(buff)+1 , 0);
+		            break;
+		        }
+		        cout << "Server : ";
+		        string s;
+		        getline(cin , s);
+		        int n = s.size();
+		        for(int i = 0 ; i < n ; i++)
+		        {
+		            buff[i] = s[i];
+		        }
+		        buff[n] = '\0';
+		        send(cSHandler , buff , strlen(buff)+1 , 0);
+		    }
+		}
+		close(cSHandler); 
+		return 0;
+    }
+    close(cSHandler); 
+}
+close(sSHandler);
+return 0;
+}
